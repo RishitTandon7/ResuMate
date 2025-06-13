@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ResuMate - AI-Powered Resume Reviewer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</head>
+<body>
+  <div id="loading-screen" class="loading-screen">
+    <div class="loader"></div>
+    <p>Loading ResuMate...</p>
+  </div>
+  <main id="main-content" class="main-content" style="display:none;">
+    <header class="header">
+      <h1 class="logo">ResuMate</h1>
+    </header>
+    <section class="upload-section">
+      <h2>Upload your resume</h2>
+      <form method="POST" enctype="multipart/form-data" id="upload-form">
+        <label for="resume" class="file-label">
+          <span class="material-icons">upload_file</span>
+          Choose a PDF or DOCX file
+        </label>
+        <input type="file" id="resume" name="resume" accept=".pdf,.docx" required />
+        <button type="submit" class="btn-primary">
+          Review Resume
+          <span class="material-icons">send</span>
+        </button>
+      </form>
+    </section>
+
+    {% if resume_text %}
+    <section class="results-section">
+      <div class="resume-text-container">
+        <h3>Extracted Resume Text</h3>
+        <pre>{{ resume_text }}</pre>
+      </div>
+      <div class="scores-container">
+        <h3>Scores</h3>
+        <div class="score-cards">
+          <div class="score-card">
+            <div class="score-circle" id="ats-score">
+              <svg viewBox="0 0 36 36" class="circular-chart purple">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circle"
+                  stroke-dasharray="{{ score.ats }}, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentage">{{ score.ats }}%</text>
+              </svg>
+            </div>
+            <p>ATS Compatibility</p>
+          </div>
+          <div class="score-card">
+            <div class="score-circle" id="grammar-score">
+              <svg viewBox="0 0 36 36" class="circular-chart blue">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circle"
+                  stroke-dasharray="{{ score.grammar }}, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentage">{{ score.grammar }}%</text>
+              </svg>
+            </div>
+            <p>Grammar</p>
+          </div>
+          <div class="score-card">
+            <div class="score-circle" id="format-score">
+              <svg viewBox="0 0 36 36" class="circular-chart green">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circle"
+                  stroke-dasharray="{{ score.format }}, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentage">{{ score.format }}%</text>
+              </svg>
+            </div>
+            <p>Format</p>
+          </div>
+        </div>
+        <div class="total-score">
+          <strong>Total Score: {{ score.total }} / 100</strong>
+        </div>
+      </div>
+      <div class="feedback-section">
+        <h3>AI Suggestions for Improvement</h3>
+        <div class="feedback-cards">
+          {% for suggestion in feedback %}
+          <div class="feedback-card">
+            <span class="material-icons feedback-icon">lightbulb</span>
+            <p>{{ suggestion }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="tips-section">
+        <h3>Resume Writing Tips</h3>
+        {% if tips %}
+        <ul>
+          {% for tip in tips %}
+          <li>{{ tip }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>No personalized tips available at this time.</p>
+        {% endif %}
+        <p>ResuMate scores your resume based on ATS compatibility, grammar, and format to help you improve your job application success.</p>
+      </div>
+    </section>
+    {% endif %}
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loadingScreen = document.getElementById('loading-screen');
+      const mainContent = document.getElementById('main-content');
+      loadingScreen.style.display = 'none';
+      mainContent.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
