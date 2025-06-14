@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ResuMate - Analyzing Resume</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+    .analyzing-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 80vh;
+      text-align: center;
+      color: var(--color-primary-dark, #574fd6);
+    }
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid var(--color-primary, #6c63ff);
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: spin 1.5s linear infinite;
+      margin-bottom: 1.5rem;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    h2 {
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-size: 1.1rem;
+      color: var(--color-text-secondary, #475569);
+    }
+  </style>
+</head>
+<body>
+  <div class="analyzing-container" role="alert" aria-live="assertive">
+    <div class="loader" aria-hidden="true"></div>
+    <h2>Analyzing your resume...</h2>
+    <p>Please wait while we analyze your resume for ATS compatibility, grammar, and formatting.</p>
+  </div>
+  <script>
+    let startTime = Date.now();
+    async function checkAnalysisStatus() {
+      try {
+        const response = await fetch('/analysis_status');
+        const data = await response.json();
+        if (data.status === 'complete') {
+          const elapsed = Date.now() - startTime;
+          const minDisplayTime = 3000; // 3 seconds
+          if (elapsed >= minDisplayTime) {
+            window.location.href = '/resume_review';
+          } else {
+            setTimeout(() => {
+              window.location.href = '/resume_review';
+            }, minDisplayTime - elapsed);
+          }
+        } else {
+          setTimeout(checkAnalysisStatus, 2000);
+        }
+      } catch (error) {
+        console.error('Error checking analysis status:', error);
+        setTimeout(checkAnalysisStatus, 5000);
+      }
+    }
+    checkAnalysisStatus();
+  </script>
+</body>
+</html>

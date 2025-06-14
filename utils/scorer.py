@@ -45,7 +45,7 @@ def score_format(text):
 
 def score_resume(text):
     """
-    Aggregate scoring function returning a dictionary with ATS, grammar, format, and total score normalized to 100.
+    Aggregate scoring function returning a dictionary with ATS, grammar, format, raw scores and total score normalized to 100.
     """
     ats_score = score_ats(text)
     grammar_score = score_grammar(text)
@@ -60,5 +60,9 @@ def score_resume(text):
         'ats': ats_norm,
         'grammar': grammar_norm,
         'format': format_norm,
-        'total': total_norm
+        'total': total_norm,
+        'ats_raw': ats_score,
+        'grammar_raw': grammar_score,
+        'format_raw': format_score,
+        'total_raw': total_score_raw
     }

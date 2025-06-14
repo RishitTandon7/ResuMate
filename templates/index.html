@@ -3,140 +3,199 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ResuMate - AI-Powered Resume Reviewer</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <title>ResuMate - AI-Powered Resume Intelligence</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-  <div id="loading-screen" class="loading-screen">
-    <div class="loader"></div>
-    <p>Loading ResuMate...</p>
-  </div>
-  <main id="main-content" class="main-content" style="display:none;">
-    <header class="header">
-      <h1 class="logo">ResuMate</h1>
-    </header>
-    <section class="upload-section">
-      <h2>Upload your resume</h2>
-      <form method="POST" enctype="multipart/form-data" id="upload-form">
-        <label for="resume" class="file-label">
-          <span class="material-icons">upload_file</span>
-          Choose a PDF or DOCX file
-        </label>
-        <input type="file" id="resume" name="resume" accept=".pdf,.docx" required />
-        <button type="submit" class="btn-primary">
-          Review Resume
-          <span class="material-icons">send</span>
-        </button>
+
+  <header class="header">
+    <div class="container header-container">
+      <div class="logo-section" style="display: flex; align-items: center; gap: 0.5rem;">
+        <span class="material-icons logo-icon">description</span>
+        <div class="logo-text">
+          <h1 style="margin: 0;">ResuMate</h1>
+          <p style="margin: 1;">AI-Powered Resume Intelligence</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content" role="main" aria-label="Resume review application main content">
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <h2 class="hero-title">
+        Transform <span class="gradient-text">Your Resume</span><br />
+        with <span class="gradient-text">AI Intelligence</span>
+      </h2>
+      <p class="hero-subtitle">
+        Get instant, professional feedback on your resume's ATS compatibility, formatting, and content quality.
+      </p>
+      <div class="features" role="list">
+        <div class="feature-card" role="listitem" tabindex="0" aria-label="AI-Powered Analysis feature">
+          <span class="material-icons feature-icon" aria-hidden="true">analytics</span>
+          <h3>AI-Powered Analysis</h3>
+        </div>
+        <div class="feature-card" role="listitem" tabindex="0" aria-label="ATS Optimization feature">
+          <span class="material-icons feature-icon" aria-hidden="true">track_changes</span>
+          <h3>ATS Optimization</h3>
+        </div>
+        <div class="feature-card" role="listitem" tabindex="0" aria-label="Instant Results feature">
+          <span class="material-icons feature-icon" aria-hidden="true">bolt</span>
+          <h3>Instant Results</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="upload-section" aria-label="Resume upload section">
+      <form method="POST" enctype="multipart/form-data" id="upload-form" class="upload-form" aria-describedby="upload-instructions">
+        <div class="upload-dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop your resume here or click to browse">
+          <span class="material-icons upload-icon" aria-hidden="true">cloud_upload</span>
+          <p id="upload-instructions"><strong>Drop your resume here</strong></p>
+          <p>or <a href="#" id="browse-link">click to browse</a></p>
+          <p class="file-size-info">Maximum file size: 10MB</p>
+          <input type="file" id="resume" name="resume" accept=".pdf,.docx" required hidden />
+          <div class="file-type-buttons" role="group" aria-label="Select file type to upload">
+            <button type="button" class="file-type-btn" aria-pressed="false">PDF</button>
+            <button type="button" class="file-type-btn" aria-pressed="false">DOCX</button>
+          </div>
+
+          <!-- Upload Confirmation -->
+          <div id="upload-confirmation" style="display:none; margin-top: 1rem;">
+            <div class="upload-confirmation-box" style="border-radius: 20px; background: #dcfce7; padding: 2rem; text-align: center; max-width: 400px; margin: 0 auto;">
+              <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div style="background: #10b981; border-radius: 50%; width: 56px; height: 56px; display: flex; justify-content: center; align-items: center;">
+                  <span class="material-icons" style="color: white; font-size: 32px;">check</span>
+                </div>
+                <div style="flex-grow: 1; text-align: left;">
+                  <h2 style="margin: 0; font-weight: 700; color: #065f46; font-size: 1.75rem;">Ready to Analyze!</h2>
+                  <p id="uploaded-filename" style="margin: 0; color: #065f46; font-weight: 600; font-size: 1.1rem;"></p>
+                </div>
+              </div>
+              <div style="background: #bbf7d0; color: #065f46; padding: 0.75rem 1.25rem; border-radius: 9999px; font-weight: 600; margin-bottom: 1.5rem;">
+                File uploaded successfully
+              </div>
+              <div style="display: flex; justify-content: center; gap: 1rem;">
+                <button type="button" class="file-type-btn" style="background: white; color: #ef4444; border: 1px solid #ef4444;">PDF</button>
+                <button type="button" class="file-type-btn" style="background: white; color: #3b82f6; border: 1px solid #3b82f6;">DOCX</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="upload-animation" style="display:none; margin-top: 1rem;">
+            <div class="loader"></div>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Review Resume</button>
       </form>
     </section>
 
-    {% if resume_text %}
-    <section class="results-section">
-      <div class="resume-text-container">
-        <h3>Extracted Resume Text</h3>
-        <pre>{{ resume_text }}</pre>
+    {% if score %}
+    <section class="results-section" aria-label="Resume analysis results" style="max-width: 900px; margin: 2rem auto;">
+      <h2>Resume Analysis Results</h2>
+      <div class="score-summary">
+        <h3>Score Summary</h3>
+        <ul>
+          <li>ATS Compatibility: {{ score.get('ats', 'N/A') }}%</li>
+          <li>Grammar: {{ score.get('grammar', 'N/A') }}%</li>
+          <li>Format: {{ score.get('format', 'N/A') }}%</li>
+        </ul>
       </div>
-      <div class="scores-container">
-        <h3>Scores</h3>
-        <div class="score-cards">
-          <div class="score-card">
-            <div class="score-circle" id="ats-score">
-              <svg viewBox="0 0 36 36" class="circular-chart purple">
-                <path class="circle-bg"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path class="circle"
-                  stroke-dasharray="{{ score.ats }}, 100"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <text x="18" y="20.35" class="percentage">{{ score.ats }}%</text>
-              </svg>
-            </div>
-            <p>ATS Compatibility</p>
-          </div>
-          <div class="score-card">
-            <div class="score-circle" id="grammar-score">
-              <svg viewBox="0 0 36 36" class="circular-chart blue">
-                <path class="circle-bg"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path class="circle"
-                  stroke-dasharray="{{ score.grammar }}, 100"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <text x="18" y="20.35" class="percentage">{{ score.grammar }}%</text>
-              </svg>
-            </div>
-            <p>Grammar</p>
-          </div>
-          <div class="score-card">
-            <div class="score-circle" id="format-score">
-              <svg viewBox="0 0 36 36" class="circular-chart green">
-                <path class="circle-bg"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path class="circle"
-                  stroke-dasharray="{{ score.format }}, 100"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <text x="18" y="20.35" class="percentage">{{ score.format }}%</text>
-              </svg>
-            </div>
-            <p>Format</p>
-          </div>
-        </div>
-        <div class="total-score">
-          <strong>Total Score: {{ score.total }} / 100</strong>
-        </div>
-      </div>
-      <div class="feedback-section">
-        <h3>AI Suggestions for Improvement</h3>
-        <div class="feedback-cards">
+      <div class="ai-feedback">
+        <h3>AI Suggestions</h3>
+        <ul>
           {% for suggestion in feedback %}
-          <div class="feedback-card">
-            <span class="material-icons feedback-icon">lightbulb</span>
-            <p>{{ suggestion }}</p>
-          </div>
+          <li>{{ suggestion }}</li>
           {% endfor %}
-        </div>
+        </ul>
       </div>
-      <div class="tips-section">
-        <h3>Resume Writing Tips</h3>
-        {% if tips %}
+      <div class="personalized-tips">
+        <h3>Personalized Tips</h3>
         <ul>
           {% for tip in tips %}
           <li>{{ tip }}</li>
           {% endfor %}
         </ul>
-        {% else %}
-        <p>No personalized tips available at this time.</p>
-        {% endif %}
-        <p>ResuMate scores your resume based on ATS compatibility, grammar, and format to help you improve your job application success.</p>
       </div>
+      <a href="{{ url_for('extracted_text') }}" class="btn-primary">View Extracted Resume Text</a>
     </section>
     {% endif %}
+
+    <footer style="text-align: center; padding: 1rem 0; font-size: 0.9rem; color: var(--color-text-muted); user-select: none;">
+      Made with ❤️ by Rishit Tandon
+    </footer>
   </main>
+
+  <!-- Only one JS block at end of body -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const loadingScreen = document.getElementById('loading-screen');
-      const mainContent = document.getElementById('main-content');
-      loadingScreen.style.display = 'none';
-      mainContent.style.display = 'block';
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('resume');
+    const browseLink = document.getElementById('browse-link');
+    const uploadConfirmation = document.getElementById('upload-confirmation');
+    const uploadedFilename = document.getElementById('uploaded-filename');
+    const uploadAnimation = document.getElementById('upload-animation');
+
+    browseLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      fileInput.click();
+    });
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    });
+
+    dropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        showUploadConfirmation(fileInput.files[0].name);
+        showUploadAnimation();
+      }
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) {
+        showUploadConfirmation(fileInput.files[0].name);
+        showUploadAnimation();
+      }
+    });
+
+    function showUploadConfirmation(filename) {
+      uploadedFilename.textContent = filename;
+      uploadConfirmation.style.display = 'flex';
+      uploadConfirmation.style.opacity = 0;
+      setTimeout(() => {
+        uploadConfirmation.style.opacity = 1;
+      }, 10);
+    }
+
+    function showUploadAnimation() {
+      uploadAnimation.style.display = 'block';
+      setTimeout(() => {
+        uploadAnimation.style.display = 'none';
+      }, 3000);
+    }
+
+    // Optional file type button handler
+    const fileTypeButtons = document.querySelectorAll('.file-type-btn');
+    fileTypeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const type = button.textContent.toLowerCase();
+        fileInput.accept = type === 'pdf' ? '.pdf' : '.docx';
+        fileInput.click();
+      });
     });
   </script>
+
 </body>
 </html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Extracted Resume Text - ResuMate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: var(--color-surface);
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 30px var(--color-shadow);
+    }
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: var(--color-primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-decoration: none;
+    }
+    .back-button:hover {
+      background-color: var(--color-primary-dark);
+    }
+    .extracted-text {
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 1rem;
+      color: var(--color-text-primary);
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 1px solid var(--color-border);
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      background: #f9fafb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Full extracted resume text">
+    <a href="{{ url_for('index') }}" class="back-button" aria-label="Back to main page">
+      <span class="material-icons">arrow_back</span> Back
+    </a>
+    <h1>Extracted Resume Text</h1>
+    <div class="extracted-text">{{ resume_text }}</div>
+  </div>
+</body>
+</html>
