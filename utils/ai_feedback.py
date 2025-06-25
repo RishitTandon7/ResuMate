@@ -62,3 +62,4 @@ def get_ai_feedback(resume_text):
             "suggestions": [f"Unexpected error: {str(e)}"],
             "tips": []
         }
+

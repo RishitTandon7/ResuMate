@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -37,12 +37,14 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: 
+      /* Disabled complex background animations for performance */
+      /* background: 
         radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
         radial-gradient(circle at 60% 10%, rgba(6, 182, 212, 0.04) 0%, transparent 50%),
-        linear-gradient(135deg, #f8fafc 0%, #f1f5f9 25%, #e2e8f0 50%, #f8fafc 75%, #ffffff 100%);
+        linear-gradient(135deg, #f8fafc 0%, #f1f5f9 25%, #e2e8f0 50%, #f8fafc 75%, #ffffff 100%); */
+      background: #f8fafc;
       color: var(--gray-900);
       line-height: 1.6;
       min-height: 100vh;
@@ -58,11 +60,12 @@
       left: -50%;
       width: 200%;
       height: 200%;
-      background: 
+      /* Disabled background animations for performance */
+      /* background: 
         radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.03) 0%, transparent 40%),
         radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.03) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.02) 0%, transparent 40%);
-      animation: gentleFloat 25s ease-in-out infinite;
+        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.02) 0%, transparent 40%); */
+      /* animation: gentleFloat 25s ease-in-out infinite; */
       z-index: -2;
     }
 
@@ -73,10 +76,11 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: 
+      /* Disabled background animations for performance */
+      /* background: 
         linear-gradient(90deg, transparent 30%, rgba(255, 255, 255, 0.02) 50%, transparent 70%),
-        linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.01) 50%, transparent 70%);
-      animation: meshShimmer 15s ease-in-out infinite;
+        linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.01) 50%, transparent 70%); */
+      /* animation: meshShimmer 15s ease-in-out infinite; */
       z-index: -1;
       pointer-events: none;
     }
@@ -133,7 +137,8 @@
 
     .score-box {
       background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(20px);
+      /* Removed backdrop-filter for performance */
+      /* backdrop-filter: blur(20px); */
       border-radius: 24px;
       padding: 2rem;
       box-shadow: 
@@ -578,7 +583,7 @@
           AI-Powered Recommendations
         </h2>
         <div class="ai-suggestions-list">
-          {% for suggestion in feedback %}
+          {% for suggestion in feedback[:3] %}
           <div class="ai-suggestion-item">
             <span class="material-icons ai-icon">check_circle</span>
             <div>{{ suggestion }}</div>
@@ -594,7 +599,7 @@
           Personalized Tips
         </h2>
         <ul>
-          {% for tip in tips %}
+          {% for tip in tips[:3] %}
           <li>{{ tip }}</li>
           {% endfor %}
         </ul>
@@ -630,14 +635,14 @@
     }
 
     function animateScoreRings() {
-      document.querySelectorAll('.score-card').forEach((card, index) => {
+      document.querySelectorAll('.score-box').forEach((card, index) => {
         setTimeout(() => {
           const score = parseFloat(card.dataset.score || 0);
           const max = parseFloat(card.dataset.max || 100);
           const percentage = Math.min(score / max, 1);
           
-          const progressCircle = card.querySelector('.score-progress');
-          const circumference = 2 * Math.PI * 80; // r = 80
+          const progressCircle = card.querySelector('.progress-ring__circle');
+          const circumference = 2 * Math.PI * 54; // r = 54
           
           progressCircle.style.strokeDasharray = circumference;
           progressCircle.style.strokeDashoffset = circumference;
@@ -652,45 +657,52 @@
     }
 
     function setupInteractiveEffects() {
-      // Advanced mouse tracking with perspective
-      document.addEventListener('mousemove', handleMouseMove);
+      // Removed mouse tracking and floating particle effects for smoother UI
+      // document.addEventListener('mousemove', handleMouseMove);
       
-      // Floating particle effects
-      document.querySelectorAll('.score-card, .section-card').forEach(card => {
-        card.addEventListener('mouseenter', createFloatingParticles);
-        card.addEventListener('mouseleave', resetCardTransform);
-      });
+      // document.querySelectorAll('.score-card, .section-card').forEach(card => {
+      //   card.addEventListener('mouseenter', createFloatingParticles);
+      //   card.addEventListener('mouseleave', resetCardTransform);
+      // });
     }
 
-    function handleMouseMove(e) {
-      const cards = document.querySelectorAll('.score-card, .section-card');
-      
-      cards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const rotateX = (y - centerY) / 15;
-        const rotateY = (centerX - x) / 15;
-        
-        if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-          card.style.transform = `
-            perspective(1000px) 
-            rotateX(${rotateX}deg) 
-            rotateY(${rotateY}deg) 
-            translateZ(20px)
-            scale(1.02)
-          `;
-        }
-      });
-    }
+    // Disabled scroll parallax effect for performance
+    // window.addEventListener('scroll', () => {
+    //   const scrolled = window.pageYOffset;
+    //   const rate = scrolled * -0.5;
+    //   document.body.style.transform = `translateY(${rate}px)`;
+    // });
 
-    function resetCardTransform(e) {
-      e.currentTarget.style.transform = '';
-    }
+    // Disabled mousemove handler for performance
+    // function handleMouseMove(e) {
+    //   const cards = document.querySelectorAll('.score-card, .section-card');
+      
+    //   cards.forEach(card => {
+    //     const rect = card.getBoundingClientRect();
+    //     const x = e.clientX - rect.left;
+    //     const y = e.clientY - rect.top;
+        
+    //     const centerX = rect.width / 2;
+    //     const centerY = rect.height / 2;
+        
+    //     const rotateX = (y - centerY) / 15;
+    //     const rotateY = (centerX - x) / 15;
+        
+    //     if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+    //       card.style.transform = `
+    //         perspective(1000px) 
+    //         rotateX(${rotateX}deg) 
+    //         rotateY(${rotateY}deg) 
+    //         translateZ(20px)
+    //         scale(1.02)
+    //       `;
+    //     }
+    //   });
+    // }
+
+    // function resetCardTransform(e) {
+    //   e.currentTarget.style.transform = '';
+    // }
 
     function createFloatingParticles(e) {
       const rect = e.currentTarget.getBoundingClientRect();
@@ -768,12 +780,17 @@
     document.head.appendChild(particleStyleSheet);
 
     // Add subtle parallax effect to background
-    window.addEventListener('scroll', () => {
-      const scrolled = window.pageYOffset;
-      const rate = scrolled * -0.5;
+    // Disabled parallax scroll effect for smoother UI
+    // window.addEventListener('scroll', () => {
+    //   const scrolled = window.pageYOffset;
+    //   const rate = scrolled * -0.5;
       
-      document.body.style.transform = `translateY(${rate}px)`;
-    });
+    //   document.body.style.transform = `translateY(${rate}px)`;
+    // });
+
+    // New card-based UI for recommendations section instead of scroll animation
+    // Undoing previous changes to restore original recommendations section
+    // No dynamic card creation, restore original template rendering
   </script>
 </body>
 </html>

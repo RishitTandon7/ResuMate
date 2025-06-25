@@ -66,3 +66,4 @@ def score_resume(text):
         'format_raw': format_score,
         'total_raw': total_score_raw
     }
+

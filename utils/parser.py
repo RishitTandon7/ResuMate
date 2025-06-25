@@ -25,3 +25,4 @@ def extract_text_from_resume(file_path):
         return extract_text_from_docx(file_path)
     else:
         return ""
+
